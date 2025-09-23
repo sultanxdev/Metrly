@@ -27,11 +27,7 @@ TripsPilot.ai will help travelers:
 - **AI/ML:** OpenAI / LangChain (experimental)  
 - **APIs:** Google Maps, Skyscanner, Amadeus (future)  
 
----
 
-## 🤝 Contributing
-This project is in **early development**, but contributions, ideas, and feedback are always welcome!  
-👉 Open an [issue](../../issues) or start a [discussion](../../discussions).
 
 ---
 
