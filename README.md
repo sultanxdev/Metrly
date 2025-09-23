@@ -1,30 +1,45 @@
-# Interviewmate clone
+# ✈️ TripsPilot.ai (Under Development)
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+🚧 **Work in Progress** — This repository contains the early-stage development of **TripsPilot.ai**, an AI-powered trip planning assistant.  
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/sultancodess-projects/v0-interviewmate-clone)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/USMlvt2xPNh)
+---
 
-## Overview
+## 📌 Project Status
+- 🚀 **Currently:** Setting up core architecture & experimenting with AI itinerary generation.  
+- 🛠️ **In Progress:** Backend APIs, frontend scaffolding, and database design.  
+- 🗺️ **Next Steps:** Integration with travel APIs (maps, flights, hotels) + AI chat planner.  
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+---
 
-## Deployment
+## 🔮 Vision
+TripsPilot.ai will help travelers:
+- ✨ Generate smart, personalized itineraries  
+- 🧭 Optimize routes & save time  
+- 📍 Discover destinations that match their interests  
+- 🤖 Use AI as a co-pilot for stress-free travel planning  
 
-Your project is live at:
+---
 
-**[https://vercel.com/sultancodess-projects/v0-interviewmate-clone](https://vercel.com/sultancodess-projects/v0-interviewmate-clone)**
+## 🛠️ Tech Stack (planned)
+- **Frontend:** React / Next.js / Tailwind CSS  
+- **Backend:** Node.js / Express  
+- **Database:** PostgreSQL / MongoDB  
+- **AI/ML:** OpenAI / LangChain (experimental)  
+- **APIs:** Google Maps, Skyscanner, Amadeus (future)  
 
-## Build your app
+---
 
-Continue building your app on:
+## 🤝 Contributing
+This project is in **early development**, but contributions, ideas, and feedback are always welcome!  
+👉 Open an [issue](../../issues) or start a [discussion](../../discussions).
 
-**[https://v0.dev/chat/projects/USMlvt2xPNh](https://v0.dev/chat/projects/USMlvt2xPNh)**
+---
 
-## How It Works
+## 📜 License
+This project will be released under the **MIT License** once stable.  
+For now, all rights reserved during development.
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+---
+
+## 🚧 Note
+This is **not production-ready** yet. Stay tuned for updates!  
