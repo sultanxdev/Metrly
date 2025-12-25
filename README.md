@@ -1,119 +1,188 @@
-# 📊 MetricFlow (Under Development)
+# QuotaFlow
 
-🚧 **Work in Progress** — MetricFlow is an event-driven microservices backend platform designed to ingest, normalize, and analyze social media data at scale.
+QuotaFlow is an **event-driven, multi-tenant backend system** for **usage metering, real-time quota enforcement, and billing-period aggregation** in SaaS platforms.
 
-It focuses on **reliable data pipelines, asynchronous processing, and analytics-ready storage**, rather than UI-heavy dashboards.
-
----
-
-## Product Overview
-
-**Name:** MetricFlow  
-**Tagline:** Event-driven analytics for social media data.  
-**Mission:** Provide a scalable backend system that collects and processes social media events into clean, queryable analytics for downstream applications.
+QuotaFlow treats **usage as a financial event**, not a log line.
 
 ---
 
-## Current Status
+## Why QuotaFlow Exists
 
-- System design and service boundaries defined  
-- Event-driven architecture planned  
-- Core ingestion and processing services under development  
-- Analytics pipelines in progress  
-- Not production-ready  
+Modern SaaS products increasingly charge based on **usage** (API calls, tokens, jobs, events).  
+The hard part is not payments — it is **correctness under failure**.
 
----
+Common problems teams face:
+- Double-counted usage due to retries
+- Missing usage during traffic spikes
+- Inconsistent quota enforcement across instances
+- Late-arriving events corrupting billing
+- No audit trail during customer disputes
 
-## Problem
-
-Social media data processing presents challenges such as:
-- High-volume event ingestion  
-- Inconsistent data formats across platforms  
-- Slow, synchronous processing pipelines  
-- Tight coupling between ingestion and analytics  
-- Difficulty scaling analytics workloads independently  
+QuotaFlow solves these problems **before billing happens**.
 
 ---
 
-## Solution
+## Core Principles
 
-MetricFlow uses a **microservices and event-driven architecture** to:
-- Ingest raw social media events asynchronously  
-- Normalize data into a unified schema  
-- Process analytics through independent services  
-- Decouple ingestion, processing, and analytics layers  
+- **Usage is immutable**
+- **Aggregation is derived state**
+- **Quotas must be enforceable in real time**
+- **Failures must not corrupt revenue**
+- **Replays must be safe**
 
-This enables **scalability, fault isolation, and extensibility**.
-
----
-
-## Key Features (Planned)
-
-- Event-based data ingestion services  
-- Platform-specific normalization pipelines  
-- Message queues for async processing  
-- Analytics and aggregation services  
-- Time-series and engagement metrics computation  
-- Fault-tolerant processing with retries  
-- Observability via logs and metrics  
+If any of these break, the system is invalid.
 
 ---
 
+No service directly queries another service’s database.
 
-Design goals:
-- Loose coupling between services  
-- Horizontal scalability per service  
-- At-least-once event processing  
-- Backpressure and retry handling  
+---
+
+## Services Overview
+
+### 1. Auth & Tenant Service
+**Responsibility**
+- Tenant lifecycle
+- API key issuance
+- Plan assignment
+
+**Owns**
+- Tenants
+- API keys
+- Plans
+
+---
+
+### 2. Quota Enforcement Service
+**Responsibility**
+- Real-time allow/deny decisions
+- Rate limiting and quota checks
+
+**Key Characteristics**
+- Redis-backed counters
+- Sliding window enforcement
+- Soft and hard limits
+- Fail-closed for hard limits
+
+---
+
+### 3. Usage Ingestion Service
+**Responsibility**
+- Accept usage events
+- Enforce idempotency
+- Publish immutable usage events
+
+**Guarantees**
+- At-least-once delivery
+- No aggregation logic
+- No pricing logic
+
+---
+
+### 4. Aggregation & Billing Service
+**Responsibility**
+- Consume usage events
+- Aggregate by tenant and billing period
+- Apply pricing rules
+- Generate invoice-ready records
+
+**Design Rules**
+- Append-only storage
+- Deterministic rebuilds
+- Late-event reconciliation
+
+Invoices are **derived**, not source of truth.
+
+---
+
+### 5. Notification & Webhook Service
+**Responsibility**
+- Quota warnings
+- Quota exceeded alerts
+- Invoice generated events
+
+**Delivery**
+- At-least-once
+- Retry with backoff
+- Dead-letter queues
+
+---
+
+## Event Model
+
+### Core Events
+- `usage.recorded`
+- `quota.warning`
+- `quota.exceeded`
+- `billing.period.closed`
+- `invoice.generated`
+
+### Event Rules
+- Events are immutable
+- Schemas are versioned
+- Partitioned by `tenant_id`
+- Safe for replay
+
+---
+
+## Consistency Model
+
+| Component              | Guarantee              |
+|------------------------|------------------------|
+| Quota checks           | Eventually consistent  |
+| Usage ingestion        | At-least-once          |
+| Aggregation            | Idempotent             |
+| Invoices               | Immutable once closed  |
+| Notifications          | At-least-once          |
+
+Exactly-once end-to-end delivery is **not claimed**.
+
+---
+
+## Failure Handling (Explicit)
+
+| Failure Scenario                  | Behavior |
+|----------------------------------|----------|
+| Duplicate usage event            | Deduplicated via idempotency keys |
+| Broker outage                    | Backpressure, no data loss |
+| Aggregation service crash        | Safe replay from events |
+| Late usage after invoice close   | Reconciliation adjustment |
+| Quota cache desync               | Conservative enforcement |
+| Plan change mid-cycle            | Effective next window |
+
+Failures delay billing — they **never corrupt it**.
 
 ---
 
 ## Tech Stack
 
-- **API & Services:** Node.js (Express / NestJS)  
-- **Messaging:** Redis Streams / Kafka (planned)  
-- **Database:** PostgreSQL  
-- **Analytics Storage:** Time-series optimized tables  
-- **Caching:** Redis  
-- **Infra:** Docker + Cloud (AWS / GCP)  
-- **Observability:** Structured logging & metrics  
+- API: Node.js / Go
+- Database: PostgreSQL (per service)
+- Cache: Redis
+- Messaging: Kafka or RabbitMQ
+- Auth: API keys + JWT
+- Infra: Docker Compose
+
+Kubernetes is intentionally out of scope.
 
 ---
 
-## Roadmap
+## What QuotaFlow Is NOT
 
-- Add platform adapters (Twitter/X, YouTube, Instagram)  
-- Schema evolution and versioning  
-- Real-time analytics streams  
-- API layer for analytics consumers  
-- Data retention and archival policies  
+- Not a payment processor
+- Not a Stripe replacement
+- Not an analytics dashboard
+- Not a UI-heavy SaaS
 
----
-
-## Contributing
-
-This project is focused on backend architecture and systems design.  
-Suggestions related to scalability, reliability, and data processing are welcome.
+QuotaFlow is **backend infrastructure**.
 
 ---
 
-## Contact
+## Local Development
 
-Built by **Sultan Alam**  
-LinkedIn: https://www.linkedin.com/in/sultan-alam436/  
-Email: sultancodess@gmail.com  
+```bash
+docker-compose up -d
 
----
 
-## License
-
-MIT License (to be applied after MVP stabilization).  
-All rights reserved during active development.
-
----
-
-## Note
-
-This repository is under active development and not production-ready.  
-Breaking changes may occur as MetricFlow evolves.
+QuotaFlow is built as **event-driven microservices** with explicit ownership boundaries.
 
