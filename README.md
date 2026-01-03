@@ -1,12 +1,12 @@
-# QuotaFlow
+# Metrly
 
-QuotaFlow is an **event-driven, multi-tenant backend system** for **usage metering, real-time quota enforcement, and billing-period aggregation** in SaaS platforms.
+Metrly is an **event-driven, multi-tenant backend system** for **usage metering, real-time quota enforcement, and billing-period aggregation** in SaaS platforms.
 
 QuotaFlow treats **usage as a financial event**, not a log line.
 
 ---
 
-## Why QuotaFlow Exists
+## Why Metrly Exists
 
 Modern SaaS products increasingly charge based on **usage** (API calls, tokens, jobs, events).  
 The hard part is not payments — it is **correctness under failure**.
@@ -167,7 +167,7 @@ Kubernetes is intentionally out of scope.
 
 ---
 
-## What QuotaFlow Is NOT
+## What Metrly Is NOT
 
 - Not a payment processor
 - Not a Stripe replacement
