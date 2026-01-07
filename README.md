@@ -1,12 +1,12 @@
-# Metrly
+# MeterPay
 
-Metrly is an **event-driven, multi-tenant backend system** for **usage metering, real-time quota enforcement, and billing-period aggregation** in SaaS platforms.
+MeterPay is an **event-driven, multi-tenant backend system** for **usage metering, real-time quota enforcement, and billing-period aggregation** in SaaS platforms.
 
 QuotaFlow treats **usage as a financial event**, not a log line.
 
 ---
 
-## Why Metrly Exists
+## Why MeterPay Exists
 
 Modern SaaS products increasingly charge based on **usage** (API calls, tokens, jobs, events).  
 The hard part is not payments — it is **correctness under failure**.
